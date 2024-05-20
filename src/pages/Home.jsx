@@ -5,9 +5,8 @@ import Create from "./Create";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-
 function Home() {
-  const[search, setSearch]= useState('')
+  const [search, setSearch] = useState("");
 
   return (
     <div>
@@ -26,7 +25,7 @@ function Home() {
               </p>
               <div>
                 <button className="mt-16 border py-4 px-5 bg-gray-700 text-white rounded-2xl hover:bg-gray-900 transition-all mr-8 hover:scale-105 hover:shadow-xl">
-                  Get Started
+                  <Link to="/addauthor">Get Started</Link>
                 </button>
               </div>
             </div>
@@ -55,24 +54,26 @@ function Home() {
                 Latest Blog Posts
               </h2>
               <div className="flex items-center justify-center">
-                <input type="text"
-                className=" w-96 border text-lg py-2 px-3 rounded-2xl border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent focus:bg-white focus:text-black  "
-                placeholder="Search..."
-                onChange={(e)=>setSearch(e.target.value)}
+                <input
+                  type="text"
+                  className=" w-96 border text-lg py-2 px-3 rounded-2xl border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent focus:bg-white focus:text-black  "
+                  placeholder="Search..."
+                  onChange={(e) => setSearch(e.target.value)}
                 />
-                {search=='' ? <div className="-ml-10">
-                  <Search /> 
-                </div>: ''} 
-                
+                {search == "" ? (
+                  <div className="-ml-10">
+                    <Search />
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
-              
             </div>
           </div>
           <div className="w-1/4 ml-16">
             <div className="flex justify-start w-full">
               <button className="border py-4 px-5 bg-gray-700 text-white rounded-2xl hover:bg-gray-900 transition-all mr-8 hover:scale-105">
-               <Link to='/create'>
-               Create Blog</Link>
+                <Link to="/create">Create Blog</Link>
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React,{useId} from 'react'
+import { forwardRef } from 'react'
 
 
 function Input({
@@ -7,7 +8,7 @@ function Input({
     type,
     placeholder,
     ...props
-}) {
+}, ref) {
 
     const id=useId()
   if (type=='textarea') {
@@ -18,6 +19,7 @@ function Input({
     className=' text-lg'>{label}</label>}
     <textarea
     id={id}
+    ref={ref}
     placeholder={placeholder}
     type={type}
     className={` border py-2 px-3 rounded-lg focus:border-blue-500 text-lg focus:outline-double min-h-60 resize-none `}
@@ -31,6 +33,7 @@ function Input({
     {label && <label className=' text-lg'>{label}</label>}
     <input
     id={id}
+    ref={ref}
     placeholder={placeholder}
     type={type}
     className={`border py-2 px-3 rounded-lg focus:border-blue-500 text-lg focus:outline-none`}
@@ -41,4 +44,4 @@ function Input({
   }
 }
 
-export default Input
+export default forwardRef(Input)

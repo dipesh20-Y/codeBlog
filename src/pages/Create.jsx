@@ -1,19 +1,80 @@
-import React from "react";
+import React,{useId} from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
-function Create({newBlog, setNewBlog }) {
+function Create() {
+  const { register, handleSubmit } = useForm();
+
+  const create =  (data) => {
+    console.log(data);
+    try {
+        const result = axios.post("http://localhost:5050/api/blog/", {
+        title: data.title,
+        content: data.content,
+        authorId:1 
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      console.log(result)
+    } catch (error) {
+      console.log("blog not added");
+    }
+   
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 lg:px-10 sm:px-6 border mt-24 bg-zinc-100 rounded-3xl shadow-xl ">
       <h1 className="text-3xl font-bold text-center ">Create New Blog Post</h1>
-      <form>
+      <form onSubmit={handleSubmit(create)}>
         <div>
-          <Input label="Title" placeholder="title of blog..." />
+          <Input
+            {...register("title", {
+              required: true,
+            })}
+            label="Title"
+            placeholder="title of blog..."
+          />
         </div>
         <div>
-          <Input label="Author" placeholder="Name of author..." />
+          <Input
+            {...register("author", {
+              required: true,
+            })}
+            label="Author"
+            placeholder="Name of author..."
+          />
         </div>
+
         <div>
+          <Input
+            {...register("content", {
+              required: true,
+            })}
+            label="Description"
+            placeholder="Content..."
+            type="textarea"
+          />
+        </div>
+        <div className="flex justify-end">
+          <Button type="submit" text="Add Blog" />
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default Create;
+
+//for image
+
+{
+  /* <div>
           <label className="block text-lg " htmlFor="image">
             Feature Image
           </label>
@@ -52,17 +113,5 @@ function Create({newBlog, setNewBlog }) {
               <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
             </div>
           </div>
-        </div>
-        <div></div>
-        <div>
-          <Input label="Description" placeholder="Content..." type="textarea" />
-        </div>
-        <div className="flex justify-end">
-          <Button type="submit" text="Add Blog" />
-        </div>
-      </form>
-    </div>
-  );
+        </div> */
 }
-
-export default Create;

@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx'
 import Create from './pages/Create.jsx'
 import Detail from './pages/Detail.jsx'
 import { BlogProvider } from './context/BlogContext.js'
+import AddAuthor from './pages/AddAuthor.jsx'
 
 
 const Main =()=>{
@@ -27,7 +28,7 @@ const Main =()=>{
           <Route path='/home' element={<Home />} />
           <Route path='/create' element={<Create newBlog={newBlog} setNewBlog={setNewBlog}/>} />
           <Route path='/detail' element={<Detail />} />
-          
+          <Route path='/addauthor' element={<AddAuthor />} />
       </Routes>
     </BrowserRouter>
    </BlogProvider>
