@@ -16,7 +16,7 @@ function Header() {
       <Link className="text-lg font-bold hover:underline underline-offset-4" href="#">
         Contact 
       </Link>
-      <Link>
+      <Link to='/authors'>
       <CircleUserRound />
       </Link>
      

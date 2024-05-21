@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
 import Input from '../components/Input'
 import Button from '../components/Button'
@@ -6,24 +6,33 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 function AddAuthor() {
+  const[newAuthor, setNewAuthor]= useState({fullName: '', email:' '})
     const navigate= useNavigate()
     const addUser =(data)=>{
-     try {
-        axios.post('http://localhost:5050/api/author', {
-            fullName: data.fullName,
-            email: data.email
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-     } catch (error) {
-        console.log("user account not created!");
-     }
-     navigate('/')
+      const { fullName, email } = data;
+      setNewAuthor((prevAuthor) => ({ ...prevAuthor, fullName, email }));
+     console.log(newAuthor)
     }
+
+   useEffect(()=>{
+    if (newAuthor.fullName && newAuthor.email) {
+      axios.post('http://localhost:5050/api/author', {
+        fullName: newAuthor.fullName,
+        email: newAuthor.email
+      })
+      .then(function (response) {
+        console.log("Author successfully created");
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(()=>{
+        navigate('/')
+        alert("Author added successfully!!")
+      })
+  
+    }
+   },[newAuthor])
 
     const{register, handleSubmit} =useForm()
   return (
