@@ -1,12 +1,41 @@
 import blog from "../assets/img/blog.jpg";
 import Card from "../components/Card";
 import { Search } from "lucide-react";
-import Create from "./Create";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useBlog } from "../context/BlogContext";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+
+export const fetchBlogs = async () => {
+  const { data } = await axios.get("http://localhost:5050/api/blog");
+  return data;
+};
 
 function Home() {
+  const { blogs, setBlogs } = useBlog();
   const [search, setSearch] = useState("");
+
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: fetchBlogs,
+  });
+
+  // console.log(data);
+  useEffect(()=>{
+    if(isSuccess && data){
+      setBlogs(data)
+    }
+  },[data, isSuccess])
+  if (isLoading) {
+    return <div>Loading.....</div>;
+  }
+
+  if (error) {
+    return <div> An error occured: {error.message}</div>;
+  }
+
+ 
 
   return (
     <div>
@@ -15,7 +44,7 @@ function Home() {
           <div className="grid gap-12 md:grid-cols-2">
             <div className="space-y-4 ">
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                {" "}
+                
                 Discover the Latest Trends and Insights
               </h1>
               <p className="text-gray-500 dark:text-gray-400 md:text-xl ">
@@ -25,7 +54,7 @@ function Home() {
               </p>
               <div>
                 <button className="mt-16 border py-4 px-5 bg-gray-700 text-white rounded-2xl hover:bg-gray-900 transition-all mr-8 hover:scale-105 hover:shadow-xl">
-                  <Link to="/addauthor">Get Started</Link>
+                  <Link to="/addauthor">Add Author</Link>
                 </button>
               </div>
             </div>
@@ -79,12 +108,15 @@ function Home() {
           </div>
         </div>
         <div className="grid gap-6 mx-auto max-w-5xl items-start py-12 lg:grid-cols-3 lg:gap-12">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {blogs &&
+            blogs.map((blog) => (
+              <Card
+                title={blog.title}
+                content={blog.content}
+                key={blog._id}
+                id={blog._id}
+              />
+            ))}
         </div>
       </div>
     </div>

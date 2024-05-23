@@ -1,24 +1,29 @@
-import axios from "axios";
 import React from "react";
-import { useBlog } from "../context/BlogContext";
+// import { useBlog } from "../context/BlogContext";
+import { useNavigate, Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteAuthor } from "../api/Query";
+import {Button} from '../components/ui/button'
 
-function Table({ fullName, email,id }) {
-    const {authors, setAuthors} =useBlog()
+function Table({ fullName, email, id }) {
+  
+  
 
-    const editAuthor=(id)=>{
+  const queryClient = useQueryClient();
 
-    }
+  const deleteAuthorMutation = useMutation({
+    mutationFn: deleteAuthor,
+    onSuccess: () => {
+      console.log('deleted Successfully')
+      
+      queryClient.invalidateQueries(['authors']);
+      
+    },
+  });
 
-    const deleteAuthor =async (id)=>{
-        try {
-            const res = await axios.delete(`http://localhost:5050/api/author/${id}`)
-            setAuthors(authors.filter((author)=> author._id!= id))
-
-            console.log("Blog deleted successfully", res.data)
-        } catch (error) {
-            console.log("Error deleting blog", error)
-        }
-    }
+  const handleDeleteAuthor = (id) => {
+    deleteAuthorMutation.mutate(id);
+  };
 
   return (
     <tbody>
@@ -26,25 +31,25 @@ function Table({ fullName, email,id }) {
         <td className="font-medium ">
           <div className="flex  items-center gap-4 px-3">
             <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full "></div>
-            <span className="font-medium text-gray-700 ">{fullName}</span>
+            <span className="font-medium text-gray-700 hover:underline hover:underline-offset-4"><Link to={`/author-detail/${id}`}>{fullName}</Link></span>
           </div>
         </td>
 
         <td>{email}</td>
         <td className="text-right px-4 py-4">
           <div className="flex items-center justify-end gap-4">
-            <button
-            onClick={editAuthor(id)}
-            className=" border py-2 px-3 rounded-lg mb-2 bg-gray-600 text-white hover:bg-gray-800 ">
-              Edit
-            </button>
-            <button 
-            onClick={()=>{
-                deleteAuthor(id)
-            }}
-            className=" border py-2 px-3 rounded-lg mb-2 bg-gray-600 text-white hover:bg-gray-800">
+            <Button >
+              <Link to={`/authors/edit-author/${id}`}> Edit</Link>
+            </Button>
+            <Button
+              onClick={() => {
+                handleDeleteAuthor(id);
+              }}
+              
+              variant = 'destructive'
+            >
               Delete
-            </button>
+            </Button>
           </div>
         </td>
       </tr>

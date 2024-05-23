@@ -7,12 +7,15 @@ export const useBlog = () => {
 };
 
 export const BlogProvider = ({children})=>{
-  const[authors, setAuthors] = useState()
+  const[authors, setAuthors] = useState();
+  const[blogs, setBlogs] = useState()
 
 
   const blogContextValue = {
     authors,
-    setAuthors
+    setAuthors,
+    blogs,
+    setBlogs
   };
   
   return (

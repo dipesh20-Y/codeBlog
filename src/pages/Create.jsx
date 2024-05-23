@@ -1,31 +1,55 @@
-import React,{useId} from "react";
+import React, { useId } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useBlog } from "../context/BlogContext";
+import { Toaster } from "@/components/ui/toaster";
+
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 function Create() {
   const { register, handleSubmit } = useForm();
 
-  const create =  (data) => {
-    console.log(data);
-    try {
-        const result = axios.post("http://localhost:5050/api/blog/", {
-        title: data.title,
-        content: data.content,
-        authorId:1 
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-      console.log(result)
-    } catch (error) {
-      console.log("blog not added");
+  const  queryClient = useQueryClient()
+  const navigate= useNavigate()
+
+  const createBlogMutation = useMutation({
+    mutationFn: async (data)=>{
+      return await axios.post("http://localhost:5050/api/blog/", {
+            title: data.title,
+            content: data.content,
+            authorId: data.authorId
+          })
+    },
+    onSuccess:()=>{
+      queryClient.invalidateQueries({queryKey:['blogs']});
+      <Toaster/>
+      navigate('/')
     }
-   
+  })
+
+  const create = (data) => {
+    createBlogMutation.mutate(data)
+    // console.log(data);
+    // try {
+    //     const result = axios.post("http://localhost:5050/api/blog/", {
+    //     title: data.title,
+    //     content: data.content,
+    //     authorId: data.authorId
+    //   })
+    //   .then(function (response) {
+    //     console.log("blog creaed successfully!!");
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    //   console.log(result)
+    // } catch (error) {
+    //   console.log("blog not added");
+    // }
   };
 
   return (
@@ -43,11 +67,11 @@ function Create() {
         </div>
         <div>
           <Input
-            {...register("author", {
+            {...register("authorId", {
               required: true,
             })}
-            label="Author"
-            placeholder="Name of author..."
+            label="AuthorId"
+            placeholder="Id of author..."
           />
         </div>
 

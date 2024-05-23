@@ -4,35 +4,57 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+// const createAuthor = async () => {
+//   const data= await  axios.post('http://localhost:5050/api/author',
+//   {
+//           fullName: data.fullName,
+//           email: data.email
+//         }
+//   );
+//   return data;
+// };
 
 function AddAuthor() {
-  const[newAuthor, setNewAuthor]= useState({fullName: '', email:' '})
+  const queryClient = useQueryClient()
+  
     const navigate= useNavigate()
+
+
+
+    const createAuthorMutation = useMutation({
+      mutationFn: async ({fullName, email})=>{
+        return await axios.post('http://localhost:5050/api/author',
+        {
+                fullName: fullName,
+                email: email
+              }
+        );
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['authors']});
+        console.log("author created successfully!")
+        navigate('/authors')
+      }
+    });
+
+   if (createAuthorMutation?.isLoading) {
+    return <div>Loading....</div>
+   }
+   if (createAuthorMutation?.error) {
+    return <div> error occured: {createAuthorMutation.error.message}</div>
+   }
+
     const addUser =(data)=>{
-      const { fullName, email } = data;
-      setNewAuthor((prevAuthor) => ({ ...prevAuthor, fullName, email }));
-     console.log(newAuthor)
+      console.log(data)
+      const {fullName, email}= data
+
+        createAuthorMutation.mutate({fullName, email})
+    
     }
 
-   useEffect(()=>{
-    if (newAuthor.fullName && newAuthor.email) {
-      axios.post('http://localhost:5050/api/author', {
-        fullName: newAuthor.fullName,
-        email: newAuthor.email
-      })
-      .then(function (response) {
-        console.log("Author successfully created");
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-      .finally(()=>{
-        navigate('/')
-        alert("Author added successfully!!")
-      })
-  
-    }
-   },[newAuthor])
+
 
     const{register, handleSubmit} =useForm()
   return (
@@ -52,9 +74,6 @@ function AddAuthor() {
         <Input
           {...register("email", {
             required: true,
-            // validate:{
-            //     matchPattern: (value) => /^([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}$/.test(value) || "Enter addess must be a valid address",
-            // }
           })}
           type='email'
           label="Email"
