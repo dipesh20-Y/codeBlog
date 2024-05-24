@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../components/Table";
 import axios from "axios";
 import { useBlog } from "../context/BlogContext";
@@ -9,6 +9,7 @@ import { fetchAuthors } from "../api/Query";
 
 function Authors() {
   // const { authors, setAuthors } = useBlog();
+  const [allAuthors, setAllAuthors]= useState()
 
   const { data:authors, isLoading, error, isSuccess } = useQuery({
     queryKey: ["authors"],
@@ -16,10 +17,12 @@ function Authors() {
   });
 
   console.log(authors);
-  if (isSuccess) {
-    // setAuthors(authors)
-    console.log(authors)
-  }
+  useEffect(()=>{
+    if (authors && isSuccess) {
+      setAllAuthors(authors)
+    }
+  },[isSuccess, authors])
+
   if (isLoading) {
     return <div>Loading.....</div>;
   }
@@ -46,9 +49,11 @@ function Authors() {
                 <th className="text-right px-8 py-4">Actions</th>
               </tr>
             </thead>
-            {authors &&
-              authors.map((author) => (
+            {allAuthors &&
+              allAuthors.map((author) => (
                 <Table
+                allAuthors={allAuthors}
+                setAllAuthors={setAllAuthors}
                   fullName={author.fullName}
                   email={author.email}
                   key={author._id}

@@ -33,27 +33,11 @@ function Create() {
 
   const create = (data) => {
     createBlogMutation.mutate(data)
-    // console.log(data);
-    // try {
-    //     const result = axios.post("http://localhost:5050/api/blog/", {
-    //     title: data.title,
-    //     content: data.content,
-    //     authorId: data.authorId
-    //   })
-    //   .then(function (response) {
-    //     console.log("blog creaed successfully!!");
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    //   console.log(result)
-    // } catch (error) {
-    //   console.log("blog not added");
-    // }
+  
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 lg:px-10 sm:px-6 border mt-24 bg-zinc-100 rounded-3xl shadow-xl ">
+    <div className="max-w-3xl mx-auto px-4 py-8 lg:px-10 sm:px-6 border mt-24 bg-zinc-100 rounded-3xl shadow-xl my-16">
       <h1 className="text-3xl font-bold text-center ">Create New Blog Post</h1>
       <form onSubmit={handleSubmit(create)}>
         <div>

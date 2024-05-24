@@ -26,3 +26,17 @@ export const fetchAuthors = async () => {
     const response= await axios.delete(`http://localhost:5050/api/blog/${id}`);
     return response.json();
   };
+  export const fetchBlogs = async () => {
+    const { data } = await axios.get("http://localhost:5050/api/blog");
+    return data;
+  };
+
+  export const fetchComment = async ()=>{
+    const {data} = await axios.get('http://localhost:5050/api/comment');
+    return data
+  }
+
+  export const deleteComment = async (id) => {
+    const response= await axios.delete(`http://localhost:5050/api/comment/${id}`);
+    return response.json();
+  };

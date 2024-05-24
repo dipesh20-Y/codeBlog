@@ -58,7 +58,7 @@ function AddAuthor() {
 
     const{register, handleSubmit} =useForm()
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 lg:px-10 sm:px-6 border mt-24 bg-zinc-100 rounded-3xl shadow-xl ">
+    <div className="max-w-3xl mx-auto px-4 py-8 lg:px-10 sm:px-6 border mt-24 bg-zinc-100 rounded-3xl shadow-xl my-16 ">
     <h1 className="text-3xl font-bold text-center ">Create Your Profile</h1>
     <form onSubmit={handleSubmit(addUser)}>
       <div>

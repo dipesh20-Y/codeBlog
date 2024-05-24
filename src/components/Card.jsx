@@ -5,9 +5,9 @@ function Card({title, content, id}) {
   return (
     <div>
       <div >
-        <div className="border px-5 py-4 shadow-lg focus: border-gray-400 rounded-t-xl hover:translate-x-0.5 ease-in-out duration-300">
+        <div className="border px-3 w-80 py-4 shadow-lg focus: border-gray-400 rounded-t-xl hover:translate-x-0.5 ease-in-out duration-300">
          
-          <h3 className="text-xl font-bold mt-8 mb-4">{title}</h3>
+          <h3 className="text-xl font-bold mt-8 mb-4 border-b-2">{title}</h3>
           <p className="text-gray-500 mb-4 line-clamp-4 ">
             {content}
           </p>
