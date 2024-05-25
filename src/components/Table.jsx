@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteAuthor } from "../api/Query";
 import { Button } from "../components/ui/button";
 
-function Table({ fullName, email, id , allAuthors, setAllAuthors}) {
+function Table({ fullName, email, id }) {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();

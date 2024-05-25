@@ -8,20 +8,20 @@ import { fetchAuthors } from "../api/Query";
 
 
 function Authors() {
-  // const { authors, setAuthors } = useBlog();
-  const [allAuthors, setAllAuthors]= useState()
+  const { authors, setAuthors } = useBlog();
+  // const [allAuthors, setAllAuthors]= useState()
 
-  const { data:authors, isLoading, error, isSuccess } = useQuery({
+  const { data:allAuthors, isLoading, error, isSuccess } = useQuery({
     queryKey: ["authors"],
     queryFn: fetchAuthors,
   });
 
-  console.log(authors);
+  console.log(allAuthors);
   useEffect(()=>{
-    if (authors && isSuccess) {
-      setAllAuthors(authors)
+    if (allAuthors && isSuccess) {
+      setAuthors(allAuthors)
     }
-  },[isSuccess, authors])
+  },[isSuccess, allAuthors])
 
   if (isLoading) {
     return <div>Loading.....</div>;
@@ -30,7 +30,7 @@ function Authors() {
   if (error) {
     return <div> An error occured: {error.message}</div>;
   }
-
+authors && console.log(authors)
 
   return (
     <div className="w-full max-w-8xl mx-auto py-12 md:py-16 lg:py-20 bg-gray-100">
@@ -49,11 +49,9 @@ function Authors() {
                 <th className="text-right px-8 py-4">Actions</th>
               </tr>
             </thead>
-            {allAuthors &&
-              allAuthors.map((author) => (
+            {authors &&
+              authors.map((author) => (
                 <Table
-                allAuthors={allAuthors}
-                setAllAuthors={setAllAuthors}
                   fullName={author.fullName}
                   email={author.email}
                   key={author._id}

@@ -12,23 +12,21 @@ import { useForm } from "react-hook-form";
 import Input from "@/components/Input";
 import Comments from "@/components/Comments";
 import { useBlog } from "@/context/BlogContext";
+import { fetchBlog } from "@/api/Query";
+import { Link } from "react-router-dom";
 
-const fetchBlog = async (id) => {
-  const { data } = await axios.get(`http://localhost:5050/api/blog/${id}`);
-  return data;
-};
 const increaseLikesCount = async (id) => {
-  const res = await axios.get(`http://localhost:5050/api/blog/likes/${id}`);
+  const res = await axios.get(`http://localhost:8080/api/blog/likes/${id}`);
   return res;
 };
 
 const decreaseLikesCount = async (id) => {
-  const res = await axios.get(`http://localhost:5050/api/blog/dislikes/${id}`);
+  const res = await axios.get(`http://localhost:8080/api/blog/dislikes/${id}`);
   return res;
 };
 
 function Detail() {
-  const{blogs, setBlogs} =useBlog()
+  const { blogs, setBlogs } = useBlog();
   const { register, handleSubmit, reset } = useForm();
   const [allComments, setAllComments] = useState([]);
   const [likesCount, setLikesCount] = useState(0);
@@ -43,7 +41,6 @@ function Detail() {
   });
   console.log(data);
 
-  
   const likeMutation = useMutation({
     mutationFn: () => increaseLikesCount(id),
     onSuccess: () => {
@@ -69,7 +66,7 @@ function Detail() {
 
   const createCommentMutation = useMutation({
     mutationFn: async (commentData) => {
-      return await axios.post("http://localhost:5050/api/comment/", {
+      return await axios.post("http://localhost:8080/api/comment/", {
         name: commentData.authorName,
         email: commentData.email,
         blogId: commentData.blogId,
@@ -77,12 +74,11 @@ function Detail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments"] );
+      queryClient.invalidateQueries(["comments"]);
       console.log("comment added successfully");
       reset();
-      <Toaster />
+      <Toaster />;
       navigate(`/detail/${id}`);
-
     },
   });
 
@@ -96,24 +92,23 @@ function Detail() {
 
   const handleDeleteBlog = () => {
     deleteBlogMutation.mutate();
-    let filter = blogs.filter((blog)=>blog._id != id)
-    setBlogs(filter)
-    navigate('/')
+    let filter = blogs.filter((blog) => blog._id != id);
+    setBlogs(filter);
+    navigate("/");
   };
 
   useEffect(() => {
     if (isSuccess && data) {
       setLikesCount(data.blog.likes_count);
-      setAllComments(data.comments)
+      setAllComments(data.comments);
     }
   }, [isSuccess, data]);
 
-  allComments && console.log(allComments)
+  allComments && console.log(allComments);
 
   const commentSubmit = (commentData) => {
     createCommentMutation.mutate(commentData);
   };
-
 
   if (isLoading) {
     return <div>Loading....</div>;
@@ -125,7 +120,7 @@ function Detail() {
 
   return (
     <div className="container mx-auto py-12 px-4 md:py-16 md:px-6 lg:py-20 space-y-24  ">
-      <div >
+      <div>
         <article className="max-w-5xl mx-auto border px-3 py-4 shadow-md bg-stone-50">
           <div className="space-y-4">
             <div className="space-y-16">
@@ -134,7 +129,7 @@ function Detail() {
               </h1>
 
               <p className="text-gray-700 text-md ">
-                Created at | {" "}
+                Created at |{" "}
                 {format(new Date(data?.blog.createdAt), "yyyy-MM-dd")}
               </p>
             </div>
@@ -180,7 +175,9 @@ function Detail() {
         </article>
         <div className="flex justify-end my-4 mx-8 space-x-4 max-w-6xl">
           <div>
-            <Button>Edit</Button>
+            <Button>
+              <Link to={`/edit-blog/${id}`}>Edit</Link>
+            </Button>
           </div>
           <div>
             <Button onClick={() => handleDeleteBlog(id)} variant="destructive">
@@ -194,72 +191,73 @@ function Detail() {
         <div className="mt-8 space-y-4">
           <h2 className="text-2xl font-bold">Comments</h2>
           <div className="space-y-4 ">
-            {allComments.length>0 ? (
-             allComments.map((one)=>
-              (
+            {allComments.length > 0 ? (
+              allComments.map((one) => (
                 <Comments
-                allComments={allComments}
-                setAllComments={setAllComments}
-              name={one.name}
-              comment={one.comment}
-              date={one.createdAt}
-              key={one._id}
-              id={one._id}
-              blogId={id}
-              />
-              )
-             ) 
-             
+                  allComments={allComments}
+                  setAllComments={setAllComments}
+                  name={one.name}
+                  comment={one.comment}
+                  date={one.createdAt}
+                  key={one._id}
+                  id={one._id}
+                  blogId={id}
+                />
+              ))
             ) : (
-              <div className="text-lg text-center my-16">No Comments to display</div>
+              <div className="text-lg text-center my-16">
+                No Comments to display
+              </div>
             )}
-            
           </div>
         </div>
         <h3 className="text-lg font-bold mt-16">Leave a Comment</h3>
         <div className="border px-4 py-4 bg-stone-50">
-        <form onSubmit={handleSubmit(commentSubmit)} className="mt-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <form
+            onSubmit={handleSubmit(commentSubmit)}
+            className="mt-4 space-y-4"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Input
+                  {...register("authorName", {
+                    required: true,
+                  })}
+                  label="Author Name"
+                  placeholder="Id of author..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Input
+                  {...register("email", {
+                    required: true,
+                  })}
+                  label="Email"
+                  placeholder="Email..."
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Input
-                {...register("authorName", {
+                {...register("blogId", {
                   required: true,
                 })}
-                label="Author Name"
-                placeholder="Id of author..."
+                label="BlogId"
+                placeholder="BlogId..."
               />
             </div>
             <div className="space-y-2">
               <Input
-                {...register("email", {
+                {...register("Comment", {
                   required: true,
                 })}
-                label="Email"
-                placeholder="Email..."
+                type="textarea"
+                label="Comment"
+                placeholder="Comment..."
               />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Input
-              {...register("blogId", {
-                required: true,
-              })}
-              label="BlogId"
-              placeholder="BlogId..."
-            />
-          </div>
-          <div className="space-y-2">
-            <Input
-              {...register("Comment", {
-                required: true,
-              })}
-              type="textarea"
-              label="Comment"
-              placeholder="Comment..."
-            />
-          </div>
-          <Button type="submit">Submit</Button>
-        </form>
+            <Button type="submit">Submit</Button>
+          </form>
         </div>
       </div>
     </div>

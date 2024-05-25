@@ -13,6 +13,7 @@ import EditAuthor from './pages/EditAuthor.jsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AuthorDetail from './pages/AuthorDetail.jsx'
 import Layout from './pages/Layout.jsx'
+import EditBlog from './pages/EditBlog.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
           <Route path='/authors' element={<Authors />} />
           <Route path='/authors/edit-author/:id' element={<EditAuthor />} />
           <Route path='/author-detail/:id' element={<AuthorDetail />} />
+          <Route path='/edit-blog/:id' element={<EditBlog />} />
       </Route>
   )
 )
@@ -31,7 +33,7 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BlogProvider>
+    <BlogProvider >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

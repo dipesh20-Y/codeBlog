@@ -68,7 +68,7 @@ function AuthorDetail() {
         </div>
         <div className="bg-white rounded-lg shadow-md p-6 dark:bg-gray-800 col-span-2 lg:col-span-2">
           <h2 className="text-2xl font-semibold mb-4">Blog Posts</h2>
-          <div className="grid gap-6 mx-auto max-w-5xl items-start py-12 lg:grid-cols-3 lg:gap-12">
+          <div className="flex justify-around mx-auto max-w-5xl items-start py-12 lg:grid-cols-3 lg:gap-12">
             {filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (
                 <Card key={blog._id} title={blog.title} content={blog.content} />

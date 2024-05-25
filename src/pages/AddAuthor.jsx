@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 // const createAuthor = async () => {
-//   const data= await  axios.post('http://localhost:5050/api/author',
+//   const data= await  axios.post('http://localhost:8080/api/author',
 //   {
 //           fullName: data.fullName,
 //           email: data.email
@@ -25,7 +25,7 @@ function AddAuthor() {
 
     const createAuthorMutation = useMutation({
       mutationFn: async ({fullName, email})=>{
-        return await axios.post('http://localhost:5050/api/author',
+        return await axios.post('http://localhost:8080/api/author',
         {
                 fullName: fullName,
                 email: email

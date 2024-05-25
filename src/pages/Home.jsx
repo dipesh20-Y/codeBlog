@@ -8,7 +8,7 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const fetchBlogs = async () => {
-  const { data } = await axios.get("http://localhost:5050/api/blog");
+  const { data } = await axios.get("http://localhost:8080/api/blog");
   return data;
 };
 

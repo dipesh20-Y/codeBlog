@@ -18,7 +18,7 @@ function Create() {
 
   const createBlogMutation = useMutation({
     mutationFn: async (data)=>{
-      return await axios.post("http://localhost:5050/api/blog/", {
+      return await axios.post("http://localhost:8080/api/blog/", {
             title: data.title,
             content: data.content,
             authorId: data.authorId
