@@ -71,7 +71,7 @@ function AuthorDetail() {
           <div className="flex justify-around mx-auto max-w-5xl items-start py-12 lg:grid-cols-3 lg:gap-12">
             {filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (
-                <Card key={blog._id} title={blog.title} content={blog.content} />
+                <Card key={blog._id} title={blog.title} content={blog.content} id={blog._id} />
               ))
             ) : (
               <p>No blog posts found for this author.</p>

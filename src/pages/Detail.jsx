@@ -65,20 +65,18 @@ function Detail() {
   });
 
   const createCommentMutation = useMutation({
-    mutationFn: async (commentData) => {
+    mutationFn: async ({ id, name,email, comment }) => {
       return await axios.post("http://localhost:8080/api/comment/", {
-        name: commentData.authorName,
-        email: commentData.email,
-        blogId: commentData.blogId,
-        comment: commentData.Comment,
+        name,
+        email,
+        blogId:id,
+        comment,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
       console.log("comment added successfully");
       reset();
-      <Toaster />;
-      navigate(`/detail/${id}`);
     },
   });
 
@@ -107,7 +105,9 @@ function Detail() {
   allComments && console.log(allComments);
 
   const commentSubmit = (commentData) => {
-    createCommentMutation.mutate(commentData);
+    console.log(commentData);
+    createCommentMutation.mutate({ id, ...commentData });
+    navigate(`/detail/${id}`);
   };
 
   if (isLoading) {
@@ -220,7 +220,7 @@ function Detail() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Input
-                  {...register("authorName", {
+                  {...register("name", {
                     required: true,
                   })}
                   label="Author Name"
@@ -237,7 +237,7 @@ function Detail() {
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Input
                 {...register("blogId", {
                   required: true,
@@ -245,10 +245,10 @@ function Detail() {
                 label="BlogId"
                 placeholder="BlogId..."
               />
-            </div>
+            </div> */}
             <div className="space-y-2">
               <Input
-                {...register("Comment", {
+                {...register("comment", {
                   required: true,
                 })}
                 type="textarea"
